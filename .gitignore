@@ -1,0 +1,15 @@
+# Archivos de base de datos locales
+/config/db.php
+
+# Archivos temporales del sistema
+*.log
+*.tmp
+*.bak
+
+# Archivos del sistema operativo
+Thumbs.db
+.DS_Store
+
+# Dependencias (si usas composer o npm)
+/vendor/
+/node_modules/
