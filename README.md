@@ -1,86 +1,71 @@
 # JJ Tienda Deportiva
 
-Sistema de gestión de inventario, ventas y clientes desarrollado como proyecto de grado - Ingeniería de Sistemas, UNAD.
+Sistema de gestión de inventario, ventas y clientes desarrollado como **proyecto de grado**.
 
-## Enlaces
+---
 
-- Repositorio: https://github.com/JhonAlex2003/jj_tienda_deportiva
-- Sistema en línea: http://jjtiendadeportiva.infinityfreeapp.com/views/login.php
-  - Usuario: admin
-  - Contraseña: admin123
+## Descripción del Proyecto
+Este proyecto permite gestionar productos, clientes y ventas de una tienda deportiva. Incluye funcionalidades como:
 
-## Descripción del proyecto
+- Registro y gestión de productos con stock, precios y categorías.
+- Registro y gestión de clientes.
+- Registro de ventas con detalle de productos y cantidades.
+- Reportes de ventas filtrados por fecha y exportables a Excel.
+- Dashboard con estadísticas de inventario, ventas y ganancias.
+- Autenticación con login y control de acceso.
 
-Este proyecto es un prototipo funcional de sistema web que permite a JJ Tienda Deportiva gestionar su inventario, ventas y clientes de forma digital, sustituyendo el control manual que se llevaba anteriormente.
-
-## Funcionalidades
-
-- Productos: registro, edición y eliminación con control de stock y stock mínimo.
-- Categorías: gestión de categorías de productos.
-- Clientes: registro y consulta de clientes.
-- Ventas: punto de venta con autocompletado de productos, cálculo automático de totales y estado de pago (pagado, abono, pendiente).
-- Abonos: control de pagos parciales y saldos pendientes por cliente.
-- Historial de inventario: trazabilidad de entradas, salidas y ajustes de stock.
-- Historial de ventas: consulta de ventas con filtros por cliente y fecha.
-- Comprobante de venta: generación de comprobante imprimible o descargable en PDF.
-- Reportes: filtrado de ventas por rango de fechas con exportación a Excel.
-- Dashboard: indicadores clave, alertas de stock bajo y ranking de productos más vendidos.
-- Perfil de usuario: edición de nombre, foto de perfil y contraseña.
-- Recuperación de contraseña mediante pregunta de seguridad.
-- Respaldo de base de datos: exportación descargable en formato SQL.
-- Manual de ayuda integrado en el sistema.
+---
 
 ## Tecnologías utilizadas
+- **PHP**: Lógica del backend.
+- **MySQL**: Base de datos.
+- **HTML / CSS / Bootstrap 5**: Interfaz de usuario.
+- **JavaScript / Chart.js**: Gráficas dinámicas.
+- **Git / GitHub**: Control de versiones y repositorio remoto.
 
-- PHP: lógica del backend, patrón MVC.
-- MySQL / MariaDB: base de datos relacional.
-- HTML / CSS / Bootstrap 5: interfaz de usuario.
-- JavaScript / Chart.js: gráficas dinámicas e interactividad.
-- Git / GitHub: control de versiones.
+---
 
-## Estructura del proyecto
+## Instalación Local
+1. Clonar el repositorio:
 
-assets/ - CSS, JS y recursos estáticos
-config/ - Configuración de conexión a la base de datos
-controllers/ - Controladores PHP (patrón MVC)
-includes/ - Layout, header y footer reutilizables
-models/ - Clases de acceso a datos
-views/ - Vistas del sistema, organizadas por módulo (productos, categorias, clientes, ventas, inventario, reportes, perfil, backup, ayuda)
-jj_tienda_db.sql - Script de creación e importación de la base de datos
+```bash
+git clone <https://github.com/JhonAlex2003/jj_tienda_deportiva/tree/main>
 
-## Instalación local
 
-1. Clonar el repositorio
 
-git clone https://github.com/JhonAlex2003/jj_tienda_deportiva.git
+Copiar el proyecto en tu servidor local (XAMPP htdocs)
+⦁	Configura la base de datos de MySQL:
+⦁	Host: 127.0.0.1
+⦁	Puerto: 3307
+⦁	Base de datos: jj_tienda_db
+⦁	Usuario: root
+⦁	Contraseña: (vacía)
 
-2. Configurar el servidor local
 
-Copiar el proyecto dentro de la carpeta htdocs de XAMPP. Configurar la base de datos en config/db.php:
+importa el archivo SQL del proyecto 
 
-Host: 127.0.0.1
-Puerto: 3307 (o el que use tu instalación de XAMPP)
-Base de datos: jj_tienda_db
-Usuario: root
-Contraseña: (vacía por defecto)
+abrir en el navegador: http://localhost:8012/jj_tienda_deportiva/views/login.php
 
-3. Importar la base de datos
 
-Desde phpMyAdmin, crear la base de datos jj_tienda_db e importar el archivo jj_tienda_db.sql.
 
-4. Ejecutar el sistema
+USO
 
-Abrir en el navegador: http://localhost/jj_tienda_deportiva/views/login.php
+⦁	Iniciar sesión con usaurio y contraseña ( admin , admin123)
+⦁	Dashboard: estadísticas de ventas e inventario
+⦁	Productos: agregar, editar o eliminar productos.
+⦁	Clientes: gestionar clientes registrados.
+⦁	Ventas: registrar ventas con detalle de productos y cantidades.
+⦁	Reportes: generar reportes de ventas filtrados por fecha y exportarlos a Excel. 
 
-## Uso
 
-Iniciar sesión con usuario y contraseña. Desde el dashboard se puede navegar a todos los módulos: productos, categorías, clientes, ventas, abonos, inventario, reportes, perfil y respaldo. El Manual de ayuda dentro del sistema (menú de usuario) explica paso a paso cada módulo.
+AUTOR
 
-## Notas
+Jhon Alex Barona Cuellar
+Proyecto de grado - Ingeniería de Sistemas
 
-Este es un prototipo funcional desarrollado con fines académicos, ejecutado en entorno local (XAMPP) y desplegado en un hosting gratuito para fines de demostración. No incluye pasarelas de pago, facturación electrónica oficial ni sincronización en la nube en tiempo real.
+NOTAS
 
-## Autor
+⦁	Asegúrate de tener XAMPP instalado con PHP y MySQL.
+⦁	El proyecto está preparado para localhost con el puerto 8012 y la base de datos indicada.
+⦁	El proyecto utiliza GitHub para control de versiones.
 
-Jhon Alexander Barona Cuellar
-Proyecto de Grado - Ingeniería de Sistemas - UNAD
