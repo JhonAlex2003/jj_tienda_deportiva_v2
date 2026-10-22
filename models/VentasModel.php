@@ -14,12 +14,23 @@ class VentasModel {
         return $this->conn->insert_id;
     }
 
-    // Registrar detalle de venta
-    public function crearDetalleVenta($id_venta, $id_producto, $cantidad, $precio_unitario) {
+    // Registrar detalle de venta. Guarda también el costo de compra que
+    // tenía el producto en ese momento, para poder calcular la ganancia
+    // real de forma exacta aunque el costo cambie más adelante.
+    public function crearDetalleVenta($id_venta, $id_producto, $cantidad, $precio_unitario, $costo_unitario = 0) {
         $subtotal = $cantidad * $precio_unitario;
-        $stmt = $this->conn->prepare("INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("iiidd", $id_venta, $id_producto, $cantidad, $precio_unitario, $subtotal);
+        $stmt = $this->conn->prepare("INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, costo_unitario, subtotal) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iiiddd", $id_venta, $id_producto, $cantidad, $precio_unitario, $costo_unitario, $subtotal);
         return $stmt->execute();
+    }
+
+    // Obtener el costo de compra actual de un producto
+    public function obtenerCostoProducto($id_producto) {
+        $stmt = $this->conn->prepare("SELECT costo_compra FROM productos WHERE id_producto = ?");
+        $stmt->bind_param("i", $id_producto);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        return $row ? (float)$row['costo_compra'] : 0;
     }
 
     // Descontar cantidad de productos después de la venta
@@ -98,7 +109,8 @@ class VentasModel {
         $sql = "SELECT 
                     v.id_venta, v.fecha_venta, v.total, v.estado_pago,
                     c.nombre AS cliente,
-                    GROUP_CONCAT(p.nombre, ' (', dv.cantidad, ')' SEPARATOR ', ') AS productos
+                    GROUP_CONCAT(p.nombre, ' (', dv.cantidad, ')' SEPARATOR ', ') AS productos,
+                    SUM(dv.subtotal - (dv.cantidad * dv.costo_unitario)) AS ganancia
                 FROM ventas v
                 LEFT JOIN clientes c ON v.id_cliente = c.id_cliente
                 LEFT JOIN detalle_venta dv ON v.id_venta = dv.id_venta

@@ -81,5 +81,44 @@ class UsuariosModel {
         $stmt->bind_param("si", $password_hash, $id_usuario);
         return $stmt->execute();
     }
+
+    // ----- Gestión de usuarios y roles (solo administrador) -----
+
+    public function listarUsuarios() {
+        $res = $this->conn->query("SELECT id_usuario, usuario, nombre, rol, fecha_registro FROM usuarios ORDER BY id_usuario ASC");
+        return $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
+    }
+
+    public function existeUsuario($usuario) {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS n FROM usuarios WHERE usuario = ?");
+        $stmt->bind_param("s", $usuario);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        return ((int)$row['n']) > 0;
+    }
+
+    public function crearUsuario($usuario, $nombre, $password_hash, $rol) {
+        $stmt = $this->conn->prepare("INSERT INTO usuarios (usuario, nombre, password, rol) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $usuario, $nombre, $password_hash, $rol);
+        return $stmt->execute();
+    }
+
+    public function cambiarRol($id_usuario, $rol) {
+        $stmt = $this->conn->prepare("UPDATE usuarios SET rol = ? WHERE id_usuario = ?");
+        $stmt->bind_param("si", $rol, $id_usuario);
+        return $stmt->execute();
+    }
+
+    public function eliminarUsuario($id_usuario) {
+        $stmt = $this->conn->prepare("DELETE FROM usuarios WHERE id_usuario = ?");
+        $stmt->bind_param("i", $id_usuario);
+        return $stmt->execute();
+    }
+
+    public function contarAdmins() {
+        $res = $this->conn->query("SELECT COUNT(*) AS n FROM usuarios WHERE rol = 'admin'");
+        $row = $res ? $res->fetch_assoc() : ['n' => 0];
+        return (int)$row['n'];
+    }
 }
 ?>
