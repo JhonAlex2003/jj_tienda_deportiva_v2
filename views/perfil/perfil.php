@@ -2,10 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../controllers/usuariosController.php';
 
 if (!isset($_SESSION['usuario'])) {
-    header("Location: /views/login.php");
+    header("Location: " . BASE_URL . "/views/login.php");
     exit();
 }
 
@@ -295,7 +296,7 @@ document.getElementById('btn-guardar-foto').addEventListener('click', function()
     const canvas = cropper.getCroppedCanvas({ width: 300, height: 300 });
     const imagenBase64 = canvas.toDataURL('image/jpeg', 0.9);
 
-    fetch('/views/perfil/actualizar_foto.php', {
+    fetch('<?= BASE_URL ?>/views/perfil/actualizar_foto.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ imagen: imagenBase64 })

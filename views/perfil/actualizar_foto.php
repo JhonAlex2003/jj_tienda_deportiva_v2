@@ -9,6 +9,7 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
+require_once __DIR__ . '/../../includes/auth.php';
 require_once __DIR__ . '/../../controllers/usuariosController.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
@@ -46,7 +47,7 @@ $nombreArchivo = 'user_' . $id_usuario . '_' . time() . '.' . $extension;
 $rutaCompleta = $carpetaDestino . $nombreArchivo;
 
 if (file_put_contents($rutaCompleta, $imagenDecodificada)) {
-    $rutaRelativa = '/assets/uploads/perfiles/' . $nombreArchivo;
+    $rutaRelativa = BASE_URL . '/assets/uploads/perfiles/' . $nombreArchivo;
 
     $controller = new UsuariosController();
     if ($controller->actualizarFoto($id_usuario, $rutaRelativa)) {
