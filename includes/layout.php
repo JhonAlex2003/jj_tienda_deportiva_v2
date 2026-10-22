@@ -1,11 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['usuario'])) {
-    header("Location: /jj_tienda_deportiva/login.php");
-    exit();
-}
+require_once __DIR__ . '/auth.php';
+requerirLogin();
 
 // Alertas de stock bajo (para la campana de notificaciones)
 require_once __DIR__ . '/../config/db.php';
@@ -40,7 +35,7 @@ $totalAlertas = count($productosAlerta);
 <!-- GOOGLE FONTS -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- CUSTOM CSS -->
-<link rel="stylesheet" href="/jj_tienda_deportiva/assets/css/style.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 
 <style>
 /* =====================
@@ -488,7 +483,7 @@ canvas {
 <!-- SIDEBAR -->
 <aside class="sidebar">
     <div class="sidebar-brand">
-        <img src="/jj_tienda_deportiva/assets/assets_img/logo.png" alt="Logo">
+        <img src="<?= BASE_URL ?>/assets/assets_img/logo.png" alt="Logo">
         <div class="sidebar-brand-text">
             <span>JJ Tienda</span>
             <span>Sistema de Gestión</span>
@@ -496,11 +491,13 @@ canvas {
     </div>
 
     <nav class="sidebar-nav">
+        <?php if (esAdmin()): ?>
         <div class="sidebar-section-label">Principal</div>
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/dashboard.php">
+           href="<?= BASE_URL ?>/views/dashboard.php">
             <i class="bi bi-speedometer2"></i> Dashboard
         </a>
+        <?php endif; ?>
 
         <div class="sidebar-section-label">Inventario</div>
         <a class="nav-link <?= in_array(basename($_SERVER['PHP_SELF']), [
@@ -519,57 +516,69 @@ canvas {
             'listar_productos.php','agregar_producto.php','actualizar_producto.php',
             'listar_categorias.php','agregar_categoria.php','actualizar_categoria.php'
         ]) ? 'show' : '' ?>" id="productosSubmenu">
-            <li><a href="/jj_tienda_deportiva/views/productos/listar_productos.php"
+            <li><a href="<?= BASE_URL ?>/views/productos/listar_productos.php"
                    class="<?= basename($_SERVER['PHP_SELF']) == 'listar_productos.php' ? 'active' : '' ?>">
                 <i class="bi bi-list-ul"></i> Listar Productos</a></li>
-            <li><a href="/jj_tienda_deportiva/views/productos/agregar_producto.php"
+            <?php if (esAdmin()): ?>
+            <li><a href="<?= BASE_URL ?>/views/productos/agregar_producto.php"
                    class="<?= basename($_SERVER['PHP_SELF']) == 'agregar_producto.php' ? 'active' : '' ?>">
                 <i class="bi bi-plus-circle"></i> Agregar Producto</a></li>
-            <li><a href="/jj_tienda_deportiva/views/categorias/listar_categorias.php"
+            <li><a href="<?= BASE_URL ?>/views/categorias/listar_categorias.php"
                    class="<?= basename($_SERVER['PHP_SELF']) == 'listar_categorias.php' ? 'active' : '' ?>">
                 <i class="bi bi-tags"></i> Categorías</a></li>
+            <?php endif; ?>
         </ul>
 
+        <?php if (esAdmin()): ?>
         <div class="sidebar-section-label">Movimientos</div>
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'historial_movimientos.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/inventario/historial_movimientos.php">
+           href="<?= BASE_URL ?>/views/inventario/historial_movimientos.php">
             <i class="bi bi-clock-history"></i> Historial de Inventario
         </a>
+        <?php endif; ?>
         <div class="sidebar-section-label">Operaciones</div>
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'listar_clientes.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/clientes/listar_clientes.php">
+           href="<?= BASE_URL ?>/views/clientes/listar_clientes.php">
             <i class="bi bi-people"></i> Clientes
         </a>
 
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'registrar_venta.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/ventas/registrar_venta.php">
+           href="<?= BASE_URL ?>/views/ventas/registrar_venta.php">
             <i class="bi bi-cart-check"></i> Ventas
         </a>
 
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'abonos_pendientes.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/ventas/abonos_pendientes.php">
+           href="<?= BASE_URL ?>/views/ventas/abonos_pendientes.php">
             <i class="bi bi-cash-coin"></i> Abonos Pendientes
         </a>
 
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'historial_ventas.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/ventas/historial_ventas.php">
+           href="<?= BASE_URL ?>/views/ventas/historial_ventas.php">
             <i class="bi bi-clock-history"></i> Historial de Ventas
         </a>
 
+        <?php if (esAdmin()): ?>
         <div class="sidebar-section-label">Análisis</div>
-        <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'reportes.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/reportes/reportes.php">
+        <a class="nav-link <?= in_array(basename($_SERVER['PHP_SELF']), ['reportes.php','reporte_inventario.php']) ? 'active' : '' ?>"
+           href="<?= BASE_URL ?>/views/reportes/reportes.php">
             <i class="bi bi-graph-up"></i> Reportes
         </a>
 
+        <div class="sidebar-section-label">Administración</div>
+        <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'usuarios.php' ? 'active' : '' ?>"
+           href="<?= BASE_URL ?>/views/usuarios/usuarios.php">
+            <i class="bi bi-person-gear"></i> Usuarios
+        </a>
+
         <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'backup.php' ? 'active' : '' ?>"
-           href="/jj_tienda_deportiva/views/backup/backup.php">
+           href="<?= BASE_URL ?>/views/backup/backup.php">
             <i class="bi bi-shield-check"></i> Respaldo de Datos
         </a>
+        <?php endif; ?>
     </nav>
 
     <div class="sidebar-footer">
-        <a href="/jj_tienda_deportiva/views/logout.php">
+        <a href="<?= BASE_URL ?>/views/logout.php">
             <i class="bi bi-box-arrow-left"></i> Cerrar sesión
         </a>
     </div>
@@ -603,7 +612,7 @@ canvas {
                         <?php foreach ($productosAlerta as $pa): ?>
                         <li>
                             <a class="dropdown-item d-flex justify-content-between align-items-center py-2"
-                               href="/jj_tienda_deportiva/views/productos/listar_productos.php">
+                               href="<?= BASE_URL ?>/views/productos/listar_productos.php">
                                 <span style="font-size:0.8rem;">
                                     <?= htmlspecialchars($pa['nombre']) ?>
                                     <?= $pa['talla'] ? ' ('.$pa['talla'].')' : '' ?>
@@ -612,13 +621,15 @@ canvas {
                             </a>
                         </li>
                         <?php endforeach; ?>
+                        <?php if (esAdmin()): ?>
                         <li><hr class="dropdown-divider m-0"></li>
                         <li>
                             <a class="dropdown-item text-center text-primary py-2" style="font-size:0.8rem;"
-                               href="/jj_tienda_deportiva/views/inventario/historial_movimientos.php">
+                               href="<?= BASE_URL ?>/views/inventario/historial_movimientos.php">
                                 Ver historial de inventario
                             </a>
                         </li>
+                        <?php endif; ?>
                     <?php else: ?>
                         <li class="px-3 py-4 text-center text-muted" style="font-size:0.825rem;">
                             <i class="bi bi-check-circle text-success d-block mb-1" style="font-size:1.5rem;"></i>
@@ -629,21 +640,21 @@ canvas {
             </div>
             <div class="dropdown">
                 <a href="#" class="topbar-user dropdown-toggle" data-bs-toggle="dropdown">
-                    <img src="<?= !empty($_SESSION['foto_perfil']) ? htmlspecialchars($_SESSION['foto_perfil']) : '/jj_tienda_deportiva/assets/assets_img/user.png' ?>" alt="Usuario">
+                    <img src="<?= !empty($_SESSION['foto_perfil']) ? htmlspecialchars($_SESSION['foto_perfil']) : BASE_URL . '/assets/assets_img/user.png' ?>" alt="Usuario">
                     <div class="topbar-user-info">
-                        <span><?= $_SESSION['usuario'] ?></span>
-                        <span>Administrador</span>
+                        <span><?= htmlspecialchars($_SESSION['usuario']) ?></span>
+                        <span><?= esAdmin() ? 'Administrador' : 'Vendedor' ?></span>
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="/jj_tienda_deportiva/views/perfil/perfil.php">
+                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/views/perfil/perfil.php">
                         <i class="bi bi-person-circle me-2"></i>Mi perfil
                     </a></li>
-                    <li><a class="dropdown-item" href="/jj_tienda_deportiva/views/ayuda/manual_ayuda.php">
+                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/views/ayuda/manual_ayuda.php">
                         <i class="bi bi-question-circle me-2"></i>Manual de ayuda
                     </a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="/jj_tienda_deportiva/views/logout.php">
+                    <li><a class="dropdown-item text-danger" href="<?= BASE_URL ?>/views/logout.php">
                         <i class="bi bi-box-arrow-left me-2"></i>Cerrar sesión
                     </a></li>
                 </ul>
@@ -653,5 +664,15 @@ canvas {
 
     <!-- PAGE CONTENT -->
     <div class="page-content">
+<?php if (!empty($_SESSION['flash_error'])): ?>
+        <div class="alert alert-warning d-flex align-items-center gap-2 mb-4" style="border-radius:10px;">
+            <i class="bi bi-exclamation-triangle"></i> <?= htmlspecialchars($_SESSION['flash_error']) ?>
+        </div>
+<?php unset($_SESSION['flash_error']); endif; ?>
+<?php if (!empty($_SESSION['flash_ok'])): ?>
+        <div class="alert alert-success d-flex align-items-center gap-2 mb-4" style="border-radius:10px;">
+            <i class="bi bi-check-circle"></i> <?= htmlspecialchars($_SESSION['flash_ok']) ?>
+        </div>
+<?php unset($_SESSION['flash_ok']); endif; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
