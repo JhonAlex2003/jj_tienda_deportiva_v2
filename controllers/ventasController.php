@@ -27,9 +27,11 @@ class VentasController {
         foreach ($productos as $prod) {
             $cantidad_limpia = (int) preg_replace('/[^0-9\-]/', '', $prod['cantidad']);
             $precio_limpio   = (float) preg_replace('/[^0-9.\-]/', '', $prod['precio_unitario']);
+            $costo_actual    = $this->modelo->obtenerCostoProducto($prod['id_producto']);
 
-            // Registrar el detalle de la venta
-            $this->modelo->crearDetalleVenta($id_venta, $prod['id_producto'], $cantidad_limpia, $precio_limpio);
+            // Registrar el detalle de la venta (con el costo de compra
+            // vigente en ese momento, para calcular ganancia real)
+            $this->modelo->crearDetalleVenta($id_venta, $prod['id_producto'], $cantidad_limpia, $precio_limpio, $costo_actual);
 
             // Descontar del inventario
             $this->modelo->descontarCantidadProducto($prod['id_producto'], $cantidad_limpia);

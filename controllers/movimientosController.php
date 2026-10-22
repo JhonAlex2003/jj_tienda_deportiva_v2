@@ -6,16 +6,16 @@ class MovimientosController {
         $this->conn = $conn;
     }
 
-    // Registrar un movimiento manual (entrada, salida o ajuste)
-    public function registrar($id_producto, $tipo_movimiento, $cantidad, $motivo = null, $id_venta = null) {
-        $stmt = $this->conn->prepare("INSERT INTO movimientos_inventario (id_producto, tipo_movimiento, cantidad, motivo, id_venta) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("isisi", $id_producto, $tipo_movimiento, $cantidad, $motivo, $id_venta);
+    // Registrar un movimiento (entrada, salida o ajuste)
+    public function registrar($id_producto, $tipo_movimiento, $cantidad, $motivo = null, $id_venta = null, $costo_unitario = null) {
+        $stmt = $this->conn->prepare("INSERT INTO movimientos_inventario (id_producto, tipo_movimiento, cantidad, costo_unitario, motivo, id_venta) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isidsi", $id_producto, $tipo_movimiento, $cantidad, $costo_unitario, $motivo, $id_venta);
         return $stmt->execute();
     }
 
     // Listar todos los movimientos con nombre del producto, con filtros opcionales
     public function listar($filtro_producto = '', $filtro_tipo = '', $filtro_fecha = '') {
-        $sql = "SELECT m.id_movimiento, m.tipo_movimiento, m.cantidad, m.motivo, m.fecha_movimiento,
+        $sql = "SELECT m.id_movimiento, m.tipo_movimiento, m.cantidad, m.costo_unitario, m.motivo, m.fecha_movimiento,
                        p.nombre AS producto_nombre, p.talla
                 FROM movimientos_inventario m
                 LEFT JOIN productos p ON m.id_producto = p.id_producto
@@ -52,17 +52,17 @@ class MovimientosController {
         return $movimientos;
     }
 
-    // Registrar entrada manual de mercancía (compra/reposición)
-    public function registrarEntrada($id_producto, $cantidad, $motivo) {
+    // Registrar entrada de mercancía nueva: suma al stock y guarda el
+    // costo de compra de esa entrega, actualizando además el costo de
+    // referencia del producto para futuros cálculos de ganancia.
+    public function registrarEntrada($id_producto, $cantidad, $costo_unitario, $motivo) {
         $this->conn->begin_transaction();
         try {
-            // Actualizar cantidad en productos
-            $stmt = $this->conn->prepare("UPDATE productos SET cantidad = cantidad + ? WHERE id_producto = ?");
-            $stmt->bind_param("ii", $cantidad, $id_producto);
+            $stmt = $this->conn->prepare("UPDATE productos SET cantidad = cantidad + ?, costo_compra = ? WHERE id_producto = ?");
+            $stmt->bind_param("idi", $cantidad, $costo_unitario, $id_producto);
             $stmt->execute();
 
-            // Registrar el movimiento
-            $this->registrar($id_producto, 'entrada', $cantidad, $motivo);
+            $this->registrar($id_producto, 'entrada', $cantidad, $motivo, null, $costo_unitario);
 
             $this->conn->commit();
             return true;
@@ -72,11 +72,11 @@ class MovimientosController {
         }
     }
 
-    // Registrar ajuste manual (corrección de inventario)
+    // Registrar ajuste manual (corrección de inventario: inventario físico,
+    // productos dañados, pérdidas, etc.). No modifica el costo de compra.
     public function registrarAjuste($id_producto, $cantidad_nueva, $motivo) {
         $this->conn->begin_transaction();
         try {
-            // Obtener cantidad actual
             $stmt = $this->conn->prepare("SELECT cantidad FROM productos WHERE id_producto = ?");
             $stmt->bind_param("i", $id_producto);
             $stmt->execute();
@@ -84,12 +84,10 @@ class MovimientosController {
 
             $diferencia = $cantidad_nueva - $actual;
 
-            // Actualizar cantidad
             $stmt = $this->conn->prepare("UPDATE productos SET cantidad = ? WHERE id_producto = ?");
             $stmt->bind_param("ii", $cantidad_nueva, $id_producto);
             $stmt->execute();
 
-            // Registrar el ajuste (con la diferencia absoluta)
             $this->registrar($id_producto, 'ajuste', abs($diferencia), $motivo . " (de $actual a $cantidad_nueva)");
 
             $this->conn->commit();
