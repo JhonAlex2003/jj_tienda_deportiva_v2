@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirLogin();
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../controllers/clientesController.php';
 
@@ -90,11 +92,13 @@ include __DIR__ . '/../../includes/layout.php';
                                    class="btn btn-sm btn-outline-primary" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
+<?php if (esAdmin()): ?>
                                 <a href="eliminar_cliente.php?id=<?= $c['id_cliente'] ?>"
                                    class="btn btn-sm btn-outline-danger" title="Eliminar"
                                    onclick="return confirm('¿Seguro que deseas eliminar este cliente?')">
                                     <i class="bi bi-trash"></i>
                                 </a>
+<?php endif; ?>
                             </div>
                         </td>
                     </tr>

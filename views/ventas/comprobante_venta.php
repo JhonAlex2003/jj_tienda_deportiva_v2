@@ -1,9 +1,11 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirLogin();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['usuario'])) {
-    header("Location: /jj_tienda_deportiva/views/login.php");
+    header("Location: /views/login.php");
     exit();
 }
 
@@ -156,7 +158,7 @@ td.num, th.num { text-align: right; }
     </div>
 
     <div class="acciones">
-        <a href="/jj_tienda_deportiva/views/ventas/historial_ventas.php" class="btn btn-back">Volver</a>
+        <a href="<?= BASE_URL ?>/views/ventas/historial_ventas.php" class="btn btn-back">Volver</a>
         <button onclick="window.print()" class="btn btn-print">Imprimir / Guardar PDF</button>
     </div>
 </div>

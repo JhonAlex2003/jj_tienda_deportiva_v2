@@ -1,9 +1,11 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirRol(['admin']);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['usuario'])) {
-    header("Location: /jj_tienda_deportiva/views/login.php");
+    header("Location: /views/login.php");
     exit();
 }
 

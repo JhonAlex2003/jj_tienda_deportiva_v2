@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../includes/auth.php';
+requerirRol(['admin']);
 include "../includes/layout.php";
 require_once "../config/db.php";
 
@@ -48,11 +50,16 @@ while ($fila = $resMes->fetch_assoc()) {
     $datosMes[] = (float)$fila["total"];
 }
 
+// CORREGIDO (RF-19): antes sumaba el total de la venta (ingreso).
+// Ahora calcula la ganancia real = subtotal vendido - costo de compra
+// de cada producto vendido, usando el detalle de cada venta.
 $resGanancias = $conn->query("
-    SELECT WEEK(fecha_venta, 1) AS semana, SUM(total) AS total
-    FROM ventas
-    WHERE MONTH(fecha_venta) = MONTH(CURDATE()) AND YEAR(fecha_venta) = YEAR(CURDATE())
-    GROUP BY WEEK(fecha_venta, 1)
+    SELECT WEEK(v.fecha_venta, 1) AS semana,
+           SUM(dv.subtotal - (dv.cantidad * dv.costo_unitario)) AS total
+    FROM ventas v
+    INNER JOIN detalle_venta dv ON v.id_venta = dv.id_venta
+    WHERE MONTH(v.fecha_venta) = MONTH(CURDATE()) AND YEAR(v.fecha_venta) = YEAR(CURDATE())
+    GROUP BY WEEK(v.fecha_venta, 1)
 ");
 $labelsGanancias = []; $datosGanancias = [];
 while ($fila = $resGanancias->fetch_assoc()) {

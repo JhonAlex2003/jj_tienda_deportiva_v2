@@ -46,7 +46,7 @@ $nombreArchivo = 'user_' . $id_usuario . '_' . time() . '.' . $extension;
 $rutaCompleta = $carpetaDestino . $nombreArchivo;
 
 if (file_put_contents($rutaCompleta, $imagenDecodificada)) {
-    $rutaRelativa = '/jj_tienda_deportiva/assets/uploads/perfiles/' . $nombreArchivo;
+    $rutaRelativa = '/assets/uploads/perfiles/' . $nombreArchivo;
 
     $controller = new UsuariosController();
     if ($controller->actualizarFoto($id_usuario, $rutaRelativa)) {

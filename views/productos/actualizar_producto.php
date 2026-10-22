@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirRol(['admin']);
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../controllers/ProductosController.php';
 
@@ -83,7 +85,7 @@ include __DIR__ . '/../../includes/layout.php';
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Precio <span class="text-danger">*</span></label>
+                            <label class="form-label">Precio de venta <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
                                 <input type="number" name="precio" class="form-control"
@@ -92,12 +94,19 @@ include __DIR__ . '/../../includes/layout.php';
                         </div>
 
                         <div class="col-md-3">
-                            <label class="form-label">Cantidad <span class="text-danger">*</span></label>
-                            <input type="number" name="cantidad" class="form-control"
-                                   value="<?= $producto['cantidad'] ?>" min="0" required>
+                            <label class="form-label">Stock actual</label>
+                            <input type="text" class="form-control" value="<?= $producto['cantidad'] ?> unidades" disabled>
+                            <small class="text-muted">Se ajusta desde Historial de Inventario.</small>
                         </div>
 
                         <div class="col-md-3">
+                            <label class="form-label">Costo de compra</label>
+                            <input type="text" class="form-control"
+                                   value="$<?= number_format($producto['costo_compra'] ?? 0, 0, ',', '.') ?>" disabled>
+                            <small class="text-muted">Se actualiza al registrar entradas.</small>
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="form-label">Stock mínimo</label>
                             <input type="number" name="stock_minimo" class="form-control"
                                    value="<?= $producto['stock_minimo'] ?? 5 ?>" min="1">

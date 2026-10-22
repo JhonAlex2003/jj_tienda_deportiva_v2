@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirLogin();
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../controllers/ProductosController.php';
 include __DIR__ . "/../../includes/layout.php";
@@ -14,9 +16,11 @@ $productos = $controller->listar();
         <h5 class="fw-bold mb-1" style="color:#1a2942;">Productos</h5>
         <p class="text-muted mb-0" style="font-size:0.825rem;">Gestión del inventario de productos</p>
     </div>
+    <?php if (esAdmin()): ?>
     <a href="agregar_producto.php" class="btn btn-primary d-flex align-items-center gap-2">
         <i class="bi bi-plus-circle"></i> Agregar Producto
     </a>
+    <?php endif; ?>
 </div>
 
 <?php if (isset($_GET['msg'])): ?>
@@ -62,7 +66,7 @@ $productos = $controller->listar();
                         <th>Precio</th>
                         <th>Stock</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <?php if (esAdmin()): ?><th>Acciones</th><?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -108,6 +112,7 @@ $productos = $controller->listar();
                             <span class="badge bg-secondary">Inactivo</span>
                             <?php endif; ?>
                         </td>
+                        <?php if (esAdmin()): ?>
                         <td>
                             <div class="d-flex gap-1">
                                 <a href="actualizar_producto.php?id=<?= $p['id_producto'] ?>"
@@ -121,6 +126,7 @@ $productos = $controller->listar();
                                 </a>
                             </div>
                         </td>
+                        <?php endif; ?>
                     </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -128,7 +134,9 @@ $productos = $controller->listar();
                         <td colspan="8" class="text-center py-5 text-muted">
                             <i class="bi bi-box-seam d-block mb-2" style="font-size:2rem;"></i>
                             No hay productos registrados.
+                            <?php if (esAdmin()): ?>
                             <a href="agregar_producto.php" class="d-block mt-2 text-primary">Agregar el primero</a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endif; ?>

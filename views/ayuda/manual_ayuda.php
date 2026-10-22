@@ -39,8 +39,11 @@ require_once __DIR__ . '/../../includes/layout.php';
                     <a href="#seccion-perfil" class="list-group-item list-group-item-action border-0 rounded-2 mb-1 ayuda-link">
                         <i class="bi bi-person-circle me-2"></i>Mi perfil y contraseña
                     </a>
-                    <a href="#seccion-respaldo" class="list-group-item list-group-item-action border-0 rounded-2 ayuda-link">
+                    <a href="#seccion-respaldo" class="list-group-item list-group-item-action border-0 rounded-2 mb-1 ayuda-link">
                         <i class="bi bi-shield-check me-2"></i>Respaldo de datos
+                    </a>
+                    <a href="#seccion-usuarios" class="list-group-item list-group-item-action border-0 rounded-2 ayuda-link">
+                        <i class="bi bi-person-gear me-2"></i>Usuarios y roles
                     </a>
                 </div>
             </div>
@@ -132,9 +135,13 @@ require_once __DIR__ . '/../../includes/layout.php';
             <div class="card-header"><i class="bi bi-graph-up me-2 text-primary"></i>Reportes</div>
             <div class="card-body p-4">
                 <p style="font-size:0.85rem;color:#475569;line-height:1.8;">
-                    Selecciona un rango de fechas (desde – hasta) y haz clic en <strong>Generar</strong>
-                    para ver todas las ventas de ese período, con el total de ingresos. Puedes descargar
-                    esa información en un archivo de Excel con el botón <strong>Excel</strong>.
+                    El módulo de <strong>Reportes</strong> (solo administrador) tiene dos pestañas.
+                    En <strong>Ventas</strong> selecciona un rango de fechas (desde – hasta) y haz clic en
+                    <strong>Generar</strong> para ver todas las ventas de ese período, con el total de ingresos.
+                    En <strong>Inventario</strong> puedes ver el estado actual de las existencias de cada producto
+                    (cantidad, estado del stock, costo y valor del inventario) y filtrar por categoría o por
+                    estado: stock bajo, agotados o normal. En ambas pestañas puedes descargar la información
+                    en un archivo de Excel con el botón <strong>Excel</strong>.
                 </p>
             </div>
         </div>
@@ -166,13 +173,29 @@ require_once __DIR__ . '/../../includes/layout.php';
             </div>
         </div>
 
-        <div id="seccion-respaldo" class="card ayuda-seccion">
+        <div id="seccion-respaldo" class="card mb-4 ayuda-seccion">
             <div class="card-header"><i class="bi bi-shield-check me-2 text-primary"></i>Respaldo de datos</div>
             <div class="card-body p-4">
                 <p style="font-size:0.85rem;color:#475569;line-height:1.8;">
                     En <strong>Respaldo de Datos</strong> puedes descargar una copia completa de toda
                     la información del sistema. Es recomendable hacerlo de vez en cuando y guardar
                     el archivo en un USB o en tu correo, por si el computador llega a fallar.
+                </p>
+            </div>
+        </div>
+
+        <div id="seccion-usuarios" class="card ayuda-seccion">
+            <div class="card-header"><i class="bi bi-person-gear me-2 text-primary"></i>Usuarios y roles</div>
+            <div class="card-body p-4">
+                <p style="font-size:0.85rem;color:#475569;line-height:1.8;">
+                    El sistema tiene dos roles. El <strong>Administrador</strong> tiene acceso completo.
+                    El <strong>Vendedor</strong> puede registrar ventas y abonos, gestionar clientes y consultar
+                    los productos y el historial de ventas, pero no ve costos ni ganancias y no puede modificar
+                    el inventario, ver reportes ni descargar respaldos.
+                </p>
+                <p style="font-size:0.85rem;color:#475569;line-height:1.8;" class="mb-0">
+                    Solo el administrador puede crear usuarios, cambiar su rol, restablecer su contraseña o
+                    eliminarlos, desde la opción <strong>Usuarios</strong> del menú lateral.
                 </p>
             </div>
         </div>

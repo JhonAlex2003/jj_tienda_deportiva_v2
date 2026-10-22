@@ -1,6 +1,7 @@
 <?php
 // views/login.php
 session_start();
+require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../controllers/usuariosController.php';
 
 $error = '';
@@ -11,10 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contrasena = $_POST['contrasena'] ?? '';
     $usuarioData = $controlador->login($usuario, $contrasena);
     if ($usuarioData) {
+        session_regenerate_id(true);
         $_SESSION['usuario'] = $usuarioData['usuario'];
         $_SESSION['id_usuario'] = $usuarioData['id_usuario'];
         $_SESSION['foto_perfil'] = $usuarioData['foto_perfil'] ?? null;
-        header('Location: ../views/dashboard.php');
+        // Rol del usuario (admin / vendedor). Si no viene definido se trata como vendedor (mínimo privilegio).
+        $_SESSION['rol'] = $usuarioData['rol'] ?? 'vendedor';
+        // El administrador entra al Dashboard; el vendedor entra directamente a Ventas.
+        header('Location: ' . urlInicioPorRol());
         exit;
     } else {
         $error = "Usuario o contraseña incorrectos.";
@@ -258,7 +263,7 @@ body {
 <!-- PANEL IZQUIERDO -->
 <div class="login-left">
     <div class="login-left-content">
-        <img src="/jj_tienda_deportiva/assets/assets_img/logo.png" alt="Logo JJ Tienda">
+        <img src="<?= BASE_URL ?>/assets/assets_img/logo.png" alt="Logo JJ Tienda">
         <h1>JJ Tienda Deportiva</h1>
         <p>Sistema de gestión de inventario, ventas y clientes para optimizar la operación del negocio.</p>
 
@@ -315,7 +320,7 @@ body {
         </button>
     </form>
 
-    <a href="/jj_tienda_deportiva/views/recuperar_password.php"
+    <a href="<?= BASE_URL ?>/views/recuperar_password.php"
        style="display:block;text-align:center;margin-top:1rem;font-size:0.8rem;color:#64748b;text-decoration:none;">
         ¿Olvidaste tu contraseña?
     </a>

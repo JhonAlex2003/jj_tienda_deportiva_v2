@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirLogin();
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../controllers/ventasController.php';
 
@@ -97,6 +99,7 @@ include __DIR__ . '/../../includes/layout.php';
                         <th>Cliente</th>
                         <th>Productos</th>
                         <th class="text-end">Total</th>
+                        <?php if (esAdmin()): ?><th class="text-end">Ganancia</th><?php endif; ?>
                         <th>Estado</th>
                         <th></th>
                     </tr>
@@ -118,6 +121,11 @@ include __DIR__ . '/../../includes/layout.php';
                         <td class="text-end fw-bold" style="color:#1a2942;">
                             $<?= number_format($v['total'], 0, ',', '.') ?>
                         </td>
+                        <?php if (esAdmin()): ?>
+                        <td class="text-end fw-bold" style="color:#059669;">
+                            $<?= number_format($v['ganancia'] ?? 0, 0, ',', '.') ?>
+                        </td>
+                        <?php endif; ?>
                         <td>
                             <?php
                             $estados = [
@@ -145,7 +153,7 @@ include __DIR__ . '/../../includes/layout.php';
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <i class="bi bi-search d-block mb-2" style="font-size:2rem;"></i>
                             No se encontraron ventas con esos filtros.
                         </td>

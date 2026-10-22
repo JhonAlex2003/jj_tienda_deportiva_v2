@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../includes/auth.php';
+requerirRol(['admin']);
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../controllers/ProductosController.php';
 include __DIR__ . "/../../includes/layout.php";
@@ -83,7 +85,7 @@ $categorias = $conn->query("SELECT * FROM categorias ORDER BY nombre ASC")->fetc
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Precio <span class="text-danger">*</span></label>
+                            <label class="form-label">Precio de venta <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
                                 <input type="number" name="precio" class="form-control"
@@ -91,16 +93,18 @@ $categorias = $conn->query("SELECT * FROM categorias ORDER BY nombre ASC")->fetc
                             </div>
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Cantidad <span class="text-danger">*</span></label>
-                            <input type="number" name="cantidad" class="form-control"
-                                   placeholder="0" min="0" required>
-                        </div>
-
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <label class="form-label">Stock mínimo</label>
                             <input type="number" name="stock_minimo" class="form-control"
                                    placeholder="5" min="1" value="5">
+                            <small class="text-muted">Umbral para alertas de bajo stock.</small>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="alert alert-info d-flex align-items-start gap-2 mb-0" style="border-radius:10px;font-size:0.825rem;">
+                                <i class="bi bi-info-circle mt-1"></i>
+                                <span>El producto se registrará con <strong>0 unidades en stock</strong>. Para cargar existencias, ve a <strong>Historial de Inventario &rarr; Registrar Entrada</strong> una vez guardado.</span>
+                            </div>
                         </div>
 
                         <div class="col-12 pt-2">

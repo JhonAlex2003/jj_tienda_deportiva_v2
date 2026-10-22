@@ -180,13 +180,13 @@ p.subtitle { font-size: 0.85rem; color: #94a3b8; text-align: center; margin-bott
         <div class="icon-header" style="background:#f0fdf4;"><i class="bi bi-check-circle" style="color:#16a34a;"></i></div>
         <h2>¡Contraseña actualizada!</h2>
         <p class="subtitle">Ya puedes iniciar sesión con tu nueva contraseña</p>
-        <a href="/jj_tienda_deportiva/views/login.php" class="btn-main d-block text-center text-decoration-none" style="line-height:1.8;">
+        <a href="/views/login.php" class="btn-main d-block text-center text-decoration-none" style="line-height:1.8;">
             Ir al inicio de sesión
         </a>
     <?php endif; ?>
 
     <?php if ($paso !== 'exito'): ?>
-    <a href="/jj_tienda_deportiva/views/login.php" class="back-link">
+    <a href="/views/login.php" class="back-link">
         <i class="bi bi-arrow-left me-1"></i>Volver al inicio de sesión
     </a>
     <?php endif; ?>
